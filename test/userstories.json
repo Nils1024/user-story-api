@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Registrierung",
+    "description": "Als neuer Benutzer möchte ich mich registrieren, damit ich einen Account anlegen kann."
+  },
+  {
+    "title": "Passwort zurücksetzen",
+    "description": "Als Benutzer möchte ich mein Passwort per E-Mail zurücksetzen können."
+  },
+  {
+    "title": "Rechnungsexport",
+    "description": "Als Buchhalter möchte ich alle Rechnungen als CSV exportieren können."
+  },
+  {
+    "title": "Dashboard",
+    "description": "Als Manager möchte ich ein Dashboard mit aktuellen Statistiken und Auswertungen sehen."
+  },
+  {
+    "title": "Urlaubsantrag stellen",
+    "description": "Als Mitarbeiter möchte ich einen Urlaubsantrag stellen, der dann vom Vorgesetzten genehmigt wird."
+  },
+  {
+    "title": "Aufgabe zuweisen",
+    "description": "Als Projektleiter möchte ich einem Mitarbeiter eine Aufgabe zuweisen und den Status verfolgen."
+  }
+]

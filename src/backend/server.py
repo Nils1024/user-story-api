@@ -1,20 +1,40 @@
 import json
 import csv
 import io
+import os
 import xml.etree.ElementTree as ET
+import httpx
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 from enum import Enum
 
-app = FastAPI(
-    title="User Story Service",
-    version="1.0.0"
-)
+app = FastAPI(title="User Story Service", version="1.0.0")
+
+AI_URL:   str | None = os.getenv("AI_API_URL")
+AI_KEY:   str | None = os.getenv("AI_API_KEY")
+AI_MODEL: str        = os.getenv("AI_MODEL", "qwen/qwen3-32b")
+
+_AI_PROMPT = """\
+Klassifiziere die folgende User Story in genau eines der drei Bündelungsfächer \
+und antworte ausschließlich mit dem Kürzel – ohne Erklärung, ohne Leerzeichen, \
+ohne Satzzeichen.
+
+Fächer:
+  SDM – Software & Daten-Management
+        (Login, Passwort, Authentifizierung, Benutzer, Rollen, Berechtigungen, Session, Token)
+  GID – Geschäfts- & Informations-Dienste
+        (Berichte, Export, Datenanalyse, Dashboards, Dokumente, Suche, Filter, Tabellen)
+  EVP – Ereignis-, Verwaltungs- & Prozessmanagement
+        (Workflows, Benachrichtigungen, Genehmigungen, Prozesse, Tickets, Aufgaben, Termine)
+
+Titel: {title}
+Beschreibung: {description}
+
+Antworte nur mit: SDM, GID oder EVP"""
 
 
 class Fach(str, Enum):
-    """Bündelungsfächer"""
     SDM = "SDM"
     GID = "GID"
     EVP = "EVP"
@@ -24,7 +44,7 @@ class UserStory(BaseModel):
     id: int
     title: str
     description: str
-    classification: Optional[Fach] = None
+    classification: Fach
 
 
 class ImportResult(BaseModel):
@@ -34,12 +54,12 @@ class ImportResult(BaseModel):
     stories: List[UserStory]
 
 
-user_stories = [
+user_stories: List[UserStory] = [
     UserStory(
         id=1,
         title="Login",
         description="Als Benutzer möchte ich mich anmelden.",
-        classification=Fach.SDM
+        classification=Fach.SDM,
     )
 ]
 
@@ -68,61 +88,67 @@ _KEYWORDS: dict[Fach, list[str]] = {
 }
 
 
-def classify(title: str, description: str) -> Fach:
+def classify_keyword(title: str, description: str) -> Fach:
     text = f"{title} {description}".lower()
     scores = {f: sum(1 for kw in kws if kw in text) for f, kws in _KEYWORDS.items()}
     return max(scores, key=lambda f: scores[f])
- 
- 
+
+
+async def classify_ai(title: str, description: str) -> Fach | None:
+    if not AI_URL or not AI_KEY:
+        return None
+    try:
+        async with httpx.AsyncClient(timeout=15.0) as client:
+            response = await client.post(
+                AI_URL,
+                headers={"Authorization": f"Bearer {AI_KEY}", "Content-Type": "application/json"},
+                json={
+                    "model": AI_MODEL,
+                    "messages": [{"role": "user", "content": _AI_PROMPT.format(title=title, description=description)}],
+                },
+            )
+            response.raise_for_status()
+            raw = response.json()["choices"][0]["message"]["content"].strip().upper()
+            for fach in Fach:
+                if fach.value in raw:
+                    return fach
+            print(f"[AI] Unerwartete Antwort: {raw!r}")
+    except Exception as exc:
+        print(f"[AI] Fehler: {exc}")
+    return None
+
+
+async def classify(title: str, description: str) -> Fach:
+    """KI hat Priorität – Keyword ist Fallback."""
+    return await classify_ai(title, description) or classify_keyword(title, description)
+
+
 def next_id() -> int:
     return max((s.id for s in user_stories), default=0) + 1
- 
- 
-def id_exists(story_id: int) -> bool:
-    return any(s.id == story_id for s in user_stories)
- 
- 
-def build_story(story_id: int, title: str, description: str) -> UserStory:
+
+
+async def build_story(title: str, description: str) -> UserStory:
     return UserStory(
-        id=story_id,
+        id=next_id(),
         title=title,
         description=description,
-        classification=classify(title, description),
+        classification=await classify(title, description),
     )
 
 
 @app.get("/userstories", response_model=List[UserStory])
 def get_user_stories(fach: Optional[Fach] = None):
     return [s for s in user_stories if fach is None or s.classification == fach]
- 
- 
+
+
 @app.get("/userstories/{story_id}", response_model=UserStory)
 def get_user_story(story_id: int):
     for s in user_stories:
         if s.id == story_id:
             return s
     raise HTTPException(status_code=404, detail="User Story nicht gefunden")
- 
- 
-@app.post("/userstories", response_model=UserStory, status_code=201)
-def create_user_story(story: UserStory):
-    if id_exists(story.id):
-        raise HTTPException(status_code=409, detail=f"ID {story.id} bereits vorhanden")
-    story.classification = classify(story.title, story.description)
-    user_stories.append(story)
-    return story
- 
- 
-@app.put("/userstories/{story_id}", response_model=UserStory)
-def update_user_story(story_id: int, updated: UserStory):
-    for i, s in enumerate(user_stories):
-        if s.id == story_id:
-            updated.classification = classify(updated.title, updated.description)
-            user_stories[i] = updated
-            return updated
-    raise HTTPException(status_code=404, detail="User Story nicht gefunden")
- 
- 
+
+
 @app.delete("/userstories/{story_id}", status_code=204)
 def delete_user_story(story_id: int):
     for i, s in enumerate(user_stories):
@@ -132,9 +158,9 @@ def delete_user_story(story_id: int):
     raise HTTPException(status_code=404, detail="User Story nicht gefunden")
 
 
-def _process_rows(rows: list[dict]) -> ImportResult:
+async def _process_rows(rows: list[dict]) -> ImportResult:
     imported, skipped, errors, added = 0, 0, [], []
- 
+
     for idx, row in enumerate(rows, start=1):
         try:
             title = str(row.get("title", "")).strip()
@@ -142,36 +168,28 @@ def _process_rows(rows: list[dict]) -> ImportResult:
                 skipped += 1
                 errors.append(f"Eintrag {idx}: 'title' fehlt")
                 continue
- 
+
             description = str(row.get("description", "")).strip()
-            story = build_story(title, description)
+            story = await build_story(title, description)
             user_stories.append(story)
             added.append(story)
             imported += 1
- 
+
         except Exception as exc:
             skipped += 1
             errors.append(f"Eintrag {idx}: {exc}")
- 
+
     return ImportResult(imported=imported, skipped=skipped, errors=errors, stories=added)
- 
- 
+
+
 @app.post("/import", response_model=ImportResult)
 async def import_stories(file: UploadFile = File(...)):
-    """
-    Erkennt das Format automatisch anhand der Dateiendung.
-    ID und Klassifikation werden intern vergeben – nur title und description werden gelesen.
- 
-    CSV  →  title,description
-    JSON →  [{"title": "...", "description": "..."}]
-    XML  →  <user_stories><user_story><title>…</title><description>…</description></user_story></user_stories>
-    """
     content = await file.read()
     name = (file.filename or "").lower()
- 
+
     if name.endswith(".csv"):
         rows = list(csv.DictReader(io.StringIO(content.decode("utf-8-sig"))))
- 
+
     elif name.endswith(".json"):
         try:
             data = json.loads(content.decode("utf-8"))
@@ -180,24 +198,25 @@ async def import_stories(file: UploadFile = File(...)):
         if not isinstance(data, list):
             raise HTTPException(status_code=400, detail="JSON muss ein Array sein")
         rows = data
- 
+
     elif name.endswith(".xml"):
         try:
             root = ET.fromstring(content.decode("utf-8"))
         except ET.ParseError as exc:
             raise HTTPException(status_code=400, detail=f"Ungültiges XML: {exc}")
         items = root.findall("user_story") if root.tag != "user_story" else [root]
- 
+
         def txt(el, tag: str) -> str:
             child = el.find(tag)
             return (child.text or "").strip() if child is not None else ""
- 
+
         rows = [{"title": txt(el, "title"), "description": txt(el, "description")} for el in items]
- 
+
     else:
         raise HTTPException(status_code=415, detail="Format nicht unterstützt – erlaubt: .csv, .json, .xml")
- 
-    return _process_rows(rows)
+
+    return await _process_rows(rows)
+
 
 if __name__ == "__main__":
     import uvicorn
