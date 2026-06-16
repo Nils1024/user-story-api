@@ -119,7 +119,6 @@ async def classify_ai(title: str, description: str) -> Fach | None:
 
 
 async def classify(title: str, description: str) -> Fach:
-    """KI hat Priorität – Keyword ist Fallback."""
     return await classify_ai(title, description) or classify_keyword(title, description)
 
 
@@ -137,16 +136,25 @@ async def build_story(title: str, description: str) -> UserStory:
 
 
 @app.get("/userstories", response_model=List[UserStory])
-def get_user_stories(fach: Optional[Fach] = None):
-    return [s for s in user_stories if fach is None or s.classification == fach]
+def get_user_stories():
+    return user_stories
 
 
 @app.get("/userstories/{story_id}", response_model=UserStory)
-def get_user_story(story_id: int):
+def get_user_story_by_id(story_id: int):
     for s in user_stories:
         if s.id == story_id:
             return s
     raise HTTPException(status_code=404, detail="User Story nicht gefunden")
+
+
+@app.get("/userstories/fach/{fach_str}", response_model=List[UserStory])
+def get_user_stories_by_fach(fach_str: str):
+    try:
+        fach = Fach(fach_str.upper())
+    except ValueError:
+        raise HTTPException(status_code=400, detail=f"Unbekanntes Fach: {fach_str}")
+    return [s for s in user_stories if s.classification == fach]
 
 
 @app.delete("/userstories/{story_id}", status_code=204)
