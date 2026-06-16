@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<user_stories>
+  <user_story>
+    <title>Registrierung</title>
+    <description>Als neuer Benutzer möchte ich mich registrieren, damit ich einen Account anlegen kann.</description>
+  </user_story>
+  <user_story>
+    <title>Passwort zurücksetzen</title>
+    <description>Als Benutzer möchte ich mein Passwort per E-Mail zurücksetzen können.</description>
+  </user_story>
+  <user_story>
+    <title>Rechnungsexport</title>
+    <description>Als Buchhalter möchte ich alle Rechnungen als CSV exportieren können.</description>
+  </user_story>
+  <user_story>
+    <title>Dashboard</title>
+    <description>Als Manager möchte ich ein Dashboard mit aktuellen Statistiken und Auswertungen sehen.</description>
+  </user_story>
+  <user_story>
+    <title>Urlaubsantrag stellen</title>
+    <description>Als Mitarbeiter möchte ich einen Urlaubsantrag stellen, der dann vom Vorgesetzten genehmigt wird.</description>
+  </user_story>
+  <user_story>
+    <title>Aufgabe zuweisen</title>
+    <description>Als Projektleiter möchte ich einem Mitarbeiter eine Aufgabe zuweisen und den Status verfolgen.</description>
+  </user_story>
+</user_stories>
