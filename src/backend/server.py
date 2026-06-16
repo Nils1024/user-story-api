@@ -6,7 +6,7 @@ import xml.etree.ElementTree as ET
 import httpx
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 from enum import Enum
 
 app = FastAPI(title="User Story Service", version="1.0.0")
@@ -155,6 +155,18 @@ def get_user_stories_by_fach(fach_str: str):
     except ValueError:
         raise HTTPException(status_code=400, detail=f"Unbekanntes Fach: {fach_str}")
     return [s for s in user_stories if s.classification == fach]
+
+
+@app.patch("/userstories/{story_id}/{fach_str}")
+def change_classification(story_id: int, fach_str: str):
+    for s in user_stories:
+        if s.id == story_id:
+            try:
+                fach = Fach(fach_str.upper())
+                s.classification = fach
+            except ValueError:
+                raise HTTPException(status_code=400, detail=f"Unbekanntes Fach: {fach_str}")
+    raise HTTPException(status_code=404, detail="User Story nicht gefunden")
 
 
 @app.delete("/userstories/{story_id}", status_code=204)
