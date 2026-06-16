@@ -1,7 +1,3 @@
-import { useState } from 'react'
-import reactLogo from '/react.svg'
-import viteLogo from '/vite.svg'
-import heroImg from '/hero.png'
 import './App.css'
 import FileDropzone from './components/ImportBox/FileDropzone'
 
@@ -11,9 +7,9 @@ function App() {
     <>
       <section id="center">
         <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
+          <img src="/hero.png" className="base" width="170" height="179" alt="" />
+          <img src="react.svg" className="framework" alt="React logo" />
+          <img src="/vite.svg" className="vite" alt="Vite logo" />
         </div>
         <div>
           <h1>Get started</h1>
