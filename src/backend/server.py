@@ -5,11 +5,22 @@ import os
 import xml.etree.ElementTree as ET
 import httpx
 from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List
 from enum import Enum
 
 app = FastAPI(title="User Story Service", version="1.0.0")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=[
+        "http://localhost:5173",
+    ],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 AI_URL:   str | None = os.getenv("AI_API_URL")
 AI_KEY:   str | None = os.getenv("AI_API_KEY")
