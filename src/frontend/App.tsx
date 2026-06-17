@@ -12,7 +12,7 @@ function App() {
           <img src="/vite.svg" className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Get started</h1>
+          <h1>User-Stories</h1>
           <FileDropzone />
         </div>
       </section>
