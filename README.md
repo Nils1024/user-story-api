@@ -19,5 +19,7 @@ export AI_MODEL="qwen/qwen3-32b"
 ```
 4. Starten:
 ```bash
-
+pm2 start "npm run dev -- --host" --name "frontend" --cwd /var/www/user-story-api/src/frontend
+pm2 start "/var/www/user-story-api/src/backend/venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000" --name "backend" --cwd /var/www/user-story-api/src>
 ```
+
