@@ -18,7 +18,7 @@ function FileDropzone() {
 
     try {
       // Geändert von /userstories auf /import, passend zu deiner server.py
-      const response = await fetch("http://192.168.178.141:8000/import", {
+      const response = await fetch("backend.saviwie.com/import", {
         method: "POST",
         body: formData,
         // Content-Type bloß nicht manuell setzen, das macht der Browser bei FormData selbst!
