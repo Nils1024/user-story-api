@@ -18,7 +18,7 @@ function FileDropzone() {
 
     try {
       // Geändert von /userstories auf /import, passend zu deiner server.py
-      const response = await fetch("backend.saviwie.com/import", {
+      const response = await fetch("https://backend.saviwie.com/import", {
         method: "POST",
         body: formData,
         // Content-Type bloß nicht manuell setzen, das macht der Browser bei FormData selbst!
@@ -28,7 +28,7 @@ function FileDropzone() {
         const result = await response.json(); // Das 'ImportResult' Pydantic-Modell aus dem Backend
     
         console.log(result);
-        setImportedStories(result.stories); 
+        //setImportedStories(result.stories); 
     
         setUploadStatus(`Upload erfolgreich! 🎉 ${result.imported} Stories importiert.`);
         console.log("Klassifizierte Stories:", result.stories);

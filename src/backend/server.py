@@ -15,6 +15,7 @@ app = FastAPI(title="User Story Service", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://user-story-api.saviwie.com",
         "http://localhost:5173",
     ],
     allow_credentials=True,
