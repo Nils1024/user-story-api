@@ -11,24 +11,16 @@ Unser aktuelles Kerndatenmodell (`UserStory`) konzentriert sich auf die für die
 | `id` | int | ja | Eindeutige, auto-inkrementelle ID (intern via `next_id()`) |
 | `title` | string | ja | Kurztitel der User Story |
 | `description` | string | nein | Ausführlichere Beschreibung |
-| `classification` | Enum (SDM/GID/EVP) | ja | Zugewiesenes Bündelungsfach |
-| `quelle` | string | nein | Herkunft: "csv", "json" oder "xml" |
-| `priorität` | string | nein | "hoch", "mittel" oder "niedrig" |
-| `status` | string | nein | "offen", "in Bearbeitung", "erledigt" |
-| `tags` | List<string> | nein | Stichworte für die Zuordnung |
+| `classification` | Enum (SDM/GID/EVP) | nein | Zugewiesenes Bündelungsfach |
 
 ### Mapping-Tabelle
 
 | Zielfeld (Modell) | Quelle A (CSV) | Quelle B (JSON) | Quelle C (XML) | Transformation |
 |---|---|---|---|---|
-| `title` | `title` / `Aufgabe` | `title` | `<title>` | String, `.strip()` |
+| `title` | `title` | `title` | `<title>` | Wird 1:1 übernommen |
 | `description` | `description` / `Beschreibung` | `body` / `description` | `<description>` | String, `.strip()` – Default: `""` |
 | `id` | — | — | — | Auto-Inkrement via `next_id()` |
 | `classification` | — | — | — | Keyword-Score → max(Fach) |
-| `quelle` | Dateiname (`.csv`) | Dateiname (`.json`) | Dateiname (`.xml`) | Aus Dateiendung abgeleitet |
-| `priorität` | `priority` (CSV) | `priority` (JSON) | `<priority>` (XML) | Default: `"mittel"` |
-| `status` | `status` (CSV) | `state` (JSON) | `<status>` (XML) | CSV Open→"offen", Closed→"erledigt" |
-| `tags` | `labels` (CSV, kommagetrennt) | `labels` (JSON, Array) | `<kategorie>` (XML) | Zu List<string> konvertieren |
 
 ---
 

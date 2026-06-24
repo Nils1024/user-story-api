@@ -26,16 +26,14 @@ Dieses Protokoll dokumentiert, was wann von wem bearbeitet wurde.
 
 | Nr. | Punkt | Verantwortlich | Priorität |
 |-----|-------|---------------|-----------|
-| 1 | PATCH `/userstories/{id}/{fach}` gibt immer 404 – Bugfix nötig | Nils B. | Mittel |
-| 2 | Frontend für interaktive Story-Anzeige | Samuel W. | Niedrig |
-| 3 | KI-Klassifizierung mit echter API testen | Nils B. | Niedrig |
-| 4 | Demo-Script für Präsentation üben | Team | Hoch (bis 08.07.) |
+| 1 | API-Dokumentation in Swagger erweitern | Team | Niedrig |
+| 2 | Mehr Tests schreiben | Team | Niedrig |
+| 3 | Präsentation machen | Team | Hoch |
 
 ---
 
 ## Nächste Schritte
 
-1. PATCH-Bug beheben (`server.py` Zeite nach dem Loop: `return s` statt `raise HTTPException`)
-2. Frontend-Komponente für Story-Anzeige
-3. API-Dokumentation in Swagger UI auf `http://localhost:8000/docs` prüfen und erweitern
-4. Demo-Generalprobe am 08.07. vorbereiten
+1. Präsentation machen
+2. API-Dokumentation in Swagger erweitern
+3. Mehr Tests schreiben

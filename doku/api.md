@@ -21,6 +21,9 @@ Interaktive Dokumentation via Swagger UI: `http://localhost:8000/docs`
 | errors | array of strings | Liste der Fehlermeldungen |
 | stories | array of UserStory | Liste der neu importierten Stories |
 
+### Fach
+Enum (SDM/GID/EVP)
+
 ## Endpunkte
 
 ### 1. User Stories abrufen

@@ -176,6 +176,7 @@ def change_classification(story_id: int, fach_str: str):
             try:
                 fach = Fach(fach_str.upper())
                 s.classification = fach
+                return s
             except ValueError:
                 raise HTTPException(status_code=400, detail=f"Unbekanntes Fach: {fach_str}")
     raise HTTPException(status_code=404, detail="User Story nicht gefunden")

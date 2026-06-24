@@ -37,8 +37,6 @@ pytest test/unit/ -v
 
 | Lücke | Beschreibung | Priorität |
 |-------|-------------|-----------|
-| PATCH-Bug | `PATCH /userstories/{id}/{fach}` gibt immer 404 zurück, auch bei existierender ID (T07) | Mittel |
-| Keine KI-Tests | Tests für die AI-Klassifizierung fehlen (abhängig von externer API) | Niedrig |
 | Edge Cases für Import | Kein Test für leere Dateien, sehr große Dateien, Sonderzeichen in Titeln | Niedrig |
 
 ---
