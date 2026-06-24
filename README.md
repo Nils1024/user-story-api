@@ -31,5 +31,5 @@ uvicorn server:app --reload
 cd src/frontend
 npm run dev
 ```
-> [!Info]
+> [!NOTE]
 > npm run dev ist nicht für richtiges deployment empfohlen.
