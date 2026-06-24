@@ -16,7 +16,7 @@ Alle Tests befinden sich in [`test/unit/api_test.py`](../test/unit/api_test.py) 
 | T04 | `GET /userstories/fach/SDM` – Gültiges Fach | Status 200, gefiltertes Ergebnis | 200, 1 Treffer | ✅ Ja |
 | T05 | `GET /userstories/fach/XYZ` – Ungültiges Fach | Status 400, Detail-Meldung | 400, "Unbekanntes Fach" | ✅ Ja |
 | T06 | `DELETE /userstories/{id}` – Existierende Story löschen | Status 204, danach 404 auf GET | 204, dann 404 | ✅ Ja |
-| T07 | `PATCH /userstories/{id}/EVP` – Klassifizierung ändern | Status 200 oder 404 (Bug tolerant), classification=EVP | 200/404 | ⚠️ Teilweise (Bug in PATCH-Logik) |
+| T07 | `PATCH /userstories/{id}/EVP` – Klassifizierung ändern | Status 200, veränderte Story | Status 200, Fach = EVP | ✅ Ja |
 | T08 | `POST /import` mit CSV | Status 200, imported=Anzahl Zeilen | 200, imported=2 | ✅ Ja |
 | T09 | `POST /import` mit JSON | Status 200, imported=Array-Größe | 200, imported=2 | ✅ Ja |
 | T10 | `POST /import` mit XML | Status 200, imports alle `<user_story>`-Elemente | 200, imported=2 | ✅ Ja |
@@ -27,7 +27,6 @@ Alle Tests befinden sich in [`test/unit/api_test.py`](../test/unit/api_test.py) 
 ## Tests ausführen
 
 ```bash
-# Alle Tests
 pytest test/unit/ -v
 ```
 
