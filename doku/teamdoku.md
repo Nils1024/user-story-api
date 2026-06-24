@@ -31,32 +31,14 @@ Die Zuordnung zu den Fächern **SDM**, **GID** und **EVP** erfolgt über eine de
 1. **KI-Klassifizierung (Primär)**: Wenn `AI_API_URL` und `AI_API_KEY` gesetzt sind, wird ein LLM mit einem strikten Prompt aufgerufen (`_AI_PROMPT` in `server.py`). Antwort muss exakt `SDM`, `GID` oder `EVP` sein.
 2. **Keyword-Matching (Fallback)**: Ein lokales Wörterbuch (`_KEYWORDS`) zählt Treffer in Titel und Beschreibung. Das Fach mit den meisten Treffern gewinnt.
 
-### Regelwerk V1 – SDM-Regeln
+### Regelwerk
 
-| Regel-ID | Auslöser (Keywords) | Begründung |
-|----------|-------------------|-----------|
-| R01 | `login`, `passwort`, `anmelden`, `abmelden`, `logout` | Authentifizierung ist Kern von Software-Sicherheit |
-| R02 | `benutzer`, `nutzer`, `user`, `account`, `konto`, `profil` | Benutzerkonten-Management gehört zu Datenverwaltung |
-| R03 | `rolle`, `berechtigung`, `rechte`, `zugang`, `session`, `token` | Zugriffskontrolle ist Software-Architektur |
-| R04 | `registrierung`, `authentifizierung`, `sicherheit`, `security` | Direkte Verbindung zur System-Sicherheit |
-
-### Regelwerk V1 – GID-Regeln
-
-| Regel-ID | Auslöser (Keywords) | Begründung |
-|----------|-------------------|-----------|
-| R05 | `rechnung`, `bericht`, `report`, `export`, `import` | Berichterstattung und Datenexport sind Geschäftsdienste |
-| R06 | `daten`, `data`, `analyse`, `statistik`, `dashboard`, `tabelle` | Datenanalyse als Geschäftsfunktion |
-| R07 | `suche`, `filter`, `sortieren`, `liste`, `dokument`, `übersicht` | Informationsbeschaffung als Dienstleistung |
-| R08 | `download`, `upload`, `diagramm`, `chart`, `visualisierung` | Datenvisualisierung als Geschäftsdienst |
-
-### Regelwerk V1 – EVP-Regeln
-
-| Regel-ID | Auslöser (Keywords) | Begründung |
-|----------|-------------------|-----------|
-| R09 | `workflow`, `prozess`, `genehmigung`, `genehmigen`, `anfrage` | Prozesssteuerung ist Kern von EVP |
-| R10 | `aufgabe`, `task`, `termin`, `benachrichtigung`, `event` | Aufgaben- und Eventmanagement gehört zu EVP |
-| R11 | `erinnerung`, `eskalation`, `kommentar`, `protokoll`, `log` | Verwaltungsprozesse mit Benachrichtigungen |
-| R12 | `antrag`, `nachricht`, `message`, `email`, `e-mail`, `kalender` | Kommunikations-Workflow als Prozessschritt |
+| Regel-ID | Fach | Auslöser (Keywords) | Begründung |
+|----------|------|---------------------|-----------|
+| R1 | **SDM** | `login`, `passwort`, `anmelden`, `abmelden`, `logout`, `benutzer`, `nutzer`, `user`, `account`, `konto`, `profil`, `rolle`, `berechtigung`, `rechte`, `zugang`, `session`, `token`, `registrierung`, `authentifizierung`, `sicherheit`, `security` | Authentifizierung, Benutzerkonten und Zugriffskontrolle gehören zu Software & Daten-Management |
+| R2 | **GID** | `rechnung`, `bericht`, `report`, `export`, `import`, `daten`, `data`, `analyse`, `statistik`, `dashboard`, `tabelle`, `suche`, `filter`, `sortieren`, `liste`, `dokument`, `übersicht`, `download`, `upload`, `diagramm`, `chart`, `visualisierung` | Berichterstattung, Datenanalyse und Informationsbeschaffung sind Geschäfts- & Informations-Dienste |
+| R3 | **EVP** | `workflow`, `prozess`, `genehmigung`, `genehmigen`, `anfrage`, `aufgabe`, `task`, `termin`, `benachrichtigung`, `event`, `erinnerung`, `eskalation`, `kommentar`, `protokoll`, `log`, `antrag`, `nachricht`, `message`, `email`, `e-mail`, `kalender` | Prozesssteuerung, Aufgabenmanagement und Kommunikations-Workflows gehören zu Ereignis-, Verwaltungs- & Prozessmanagement |
+| R4 | **SDM, GID oder EVP** | Wenn `AI_API_URL` und `AI_API_KEY` gesetzt sind: LLM mit striktem Prompt klassifiziert; sonst Keyword-Score (max(Fach) gewinnt) | - |
 
 ### Grenzfälle
 
