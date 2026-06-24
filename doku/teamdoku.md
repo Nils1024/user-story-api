@@ -2,9 +2,9 @@
 
 ## 1. Datenmodell und Mapping
 
-Unser aktuelles Kerndatenmodell (`UserStory`) konzentriert sich auf die für die Klassifizierung zwingend notwendigen Felder. Im erweiterten Modell (für die Abschlusspräsentation) kommen zusätzliche Metadaten-Felder hinzu.
+Unser aktuelles Kerndatenmodell (`UserStory`) konzentriert sich auf die für die Klassifizierung zwingend notwendigen Felder.
 
-### Erweitertes Datenmodell
+### Datenmodell (UserStory)
 
 | Feld | Datentyp | Pflicht | Beschreibung |
 |------|----------|---------|-------------|
@@ -18,15 +18,15 @@ Unser aktuelles Kerndatenmodell (`UserStory`) konzentriert sich auf die für die
 | Zielfeld (Modell) | Quelle A (CSV) | Quelle B (JSON) | Quelle C (XML) | Transformation |
 |---|---|---|---|---|
 | `title` | `title` | `title` | `<title>` | Wird 1:1 übernommen |
-| `description` | `description` / `Beschreibung` | `body` / `description` | `<description>` | String, `.strip()` – Default: `""` |
+| `description` | `description` | `description` | `<description>` | Wird 1:1 übernommen |
 | `id` | — | — | — | Auto-Inkrement via `next_id()` |
-| `classification` | — | — | — | Keyword-Score → max(Fach) |
+| `classification` | — | — | — | Keyword-Score → max(Fach) oder KI |
 
 ---
 
 ## 2. Fachzuordnung
 
-Die Zuordnung zu den Fächern **SDM** (Software & Daten-Management), **GID** (Geschäfts- & Informations-Dienste) und **EVP** (Ereignis-, Verwaltungs- & Prozessmanagement) erfolgt zweistufig:
+Die Zuordnung zu den Fächern **SDM**, **GID** und **EVP** erfolgt über eine der folgenden Regeln:
 
 1. **KI-Klassifizierung (Primär)**: Wenn `AI_API_URL` und `AI_API_KEY` gesetzt sind, wird ein LLM mit einem strikten Prompt aufgerufen (`_AI_PROMPT` in `server.py`). Antwort muss exakt `SDM`, `GID` oder `EVP` sein.
 2. **Keyword-Matching (Fallback)**: Ein lokales Wörterbuch (`_KEYWORDS`) zählt Treffer in Titel und Beschreibung. Das Fach mit den meisten Treffern gewinnt.
@@ -89,17 +89,13 @@ Datei (CSV/JSON/XML) → POST /import → internes Format (UserStory) → KI (fa
 
 | Rolle | Name(n) | Schwerpunktaufgaben |
 |-------|---------|-------------------|
-| **Rolle A** (Datenimport & Mapping) | Samuel W. | CSV/JSON/XML-Parsing in `server.py`, data-Mapping, Beispieldaten in `test/manual/` |
-| **Rolle B** (Fachlogik & Regelwerk) | Nils B. | Keyword-Wörterbuch `_KEYWORDS`, KI-Prompt `_AI_PROMPT`, Klassifizierungs-Logik `classify()`, Architektur |
+| **Rolle A** (Datenimport & Mapping) | Samuel W. | Frontend |
+| **Rolle B** (Fachlogik & Regelwerk) | Nils B. | Backend |
 | **Rolle C** (API, Tests, Doku) | – | Nicht separat besetzt; Aufgaben auf Rolle A und B verteilt |
 
 ---
 
 ## 5. Herausforderungen und Lösungswege
-
-### Heterogene Quelldaten
-**Problem:** CSV, JSON und XML verwenden unterschiedliche Feldnamen für dasselbe Konzept (z. B. "title" vs. "Aufgabe").  
-**Lösung:** Mapping-Tabelle als Design-Dokument vor der Implementierung erstellt. Im Code wird jeder Parser separat implementiert (`csv.DictReader`, `json.loads`, `xml.etree.ElementTree`), aber alle liefern das gleiche Format (`List[dict]` mit `title`/`description`).
 
 ### Fachzuordnung ohne KI
 **Problem:** Ohne externe API muss die Klassifizierung komplett lokal funktionieren.  
