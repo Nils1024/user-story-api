@@ -5,11 +5,15 @@ Ein FastAPI-basierter Dienst zum Klassifizieren von User Stories in die Bündelu
 
 1. Repository klonen
 ```bash
-git clone 
+git clone https://github.com/Nils1024/user-story-api.git
+cd user-stories-api
 ```
 2. Dependencies installieren
 ```bash
 pip install -r ./src/backend/requirements.txt
+cd ./src/frontend
+npm install
+cd ../..
 ```
 3. (Optional) Umgebungsvariabeln für KI-Klassifizierung setzen.
 ```bash
@@ -17,9 +21,15 @@ export AI_API_URL="https://api.example.com/v1/chat/completions"
 export AI_API_KEY="dein-api-key"
 export AI_MODEL="qwen/qwen3-32b"
 ```
-4. Starten:
+4. Backend starten:
 ```bash
-pm2 start "npm run dev -- --host" --name "frontend" --cwd /var/www/user-story-api/src/frontend
-pm2 start "/var/www/user-story-api/src/backend/venv/bin/uvicorn server:app --host 0.0.0.0 --port 8000" --name "backend" --cwd /var/www/user-story-api/src>
+cd src/backend
+uvicorn server:app --reload
 ```
-
+5. (Optional) Frontend starten:
+```bash
+cd src/frontend
+npm run dev
+```
+> [!NOTE]
+> npm run dev ist nicht für richtiges deployment empfohlen.
