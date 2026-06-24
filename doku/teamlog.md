@@ -17,8 +17,8 @@ Dieses Protokoll dokumentiert, was wann von wem bearbeitet wurde.
 | 10.06. | Samuel W. | POST `/import` für alle drei Formate implementiert, API-Skizze vervollständigt | Tests fehlen | curl-Tests + Unit-Tests |
 | 17.06. | Nils B. | KI-Klassifizierung mit `classify_ai()` und `_AI_PROMPT`, httpx-Integration, CORS-Middleware | Edge Cases im Import | Fehlerbehandlung verbessern |
 | 17.06. | Samuel W. | Unit-Tests in `test/unit/api_test.py` (11 Tests), curl-Manual-Test-Skript erstellt | Patch-Bug bleibt offen | PATCH fixen + Test abdecken |
-| 24.06. | Nils B. | Dokumentation vervollständigt: teamdoku.md mit Regelwerk, Abgabedokument erstellt | PATCH-Bug nicht gefixt | Bugfix für nächste Woche |
-| 24.06. | Samuel W. | API-Dokumentation erweitert, Tests.md erstellt, Reflexionsvorlage vorbereitet | Frontend fehlt | Demo-Vorbereitung |
+| 24.06. | Nils B. | Dokumentation vervollständigt: teamdoku.md mit Regelwerk, Abgabedokument erstellt |  |  |
+| 24.06. | Samuel W. | Frontend vervollständigt, Dokumentation vervollständigt |  |  |
 
 ---
 

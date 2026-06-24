@@ -32,14 +32,6 @@ pytest test/unit/ -v
 
 ---
 
-## Bekannte Test-Lücken
-
-| Lücke | Beschreibung | Priorität |
-|-------|-------------|-----------|
-| Edge Cases für Import | Kein Test für leere Dateien, sehr große Dateien, Sonderzeichen in Titeln | Niedrig |
-
----
-
 ## Manuelle Tests
 
 In [`test/manual/`](../test/manual/) befinden sich manuelle Test-Dateien:

@@ -33,7 +33,7 @@ Enum (SDM/GID/EVP)
 
 ### 2. User Stories manipulieren
 - **PATCH** `/userstories/{story_id}/{fach_str}` – Ändert die Klassifizierung einer bestehenden User Story manuell.
-- **DELETE** `/userstories/{story_id}` – Löscht eine User Story aus dem System.
+- **DELETE** `/userstories/{story_id}` – Löscht eine User Story.
 
 ### 3. Datenimport
 - **POST** `/import`
