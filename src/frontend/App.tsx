@@ -1,5 +1,5 @@
 import './App.css'
-import FileDropzone from './components/ImportBox/FileDropzone'
+import FileDropzone from './components/FileDropzone'
 
 
 function App() {

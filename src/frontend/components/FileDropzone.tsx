@@ -1,9 +1,11 @@
 import { useDropzone } from "react-dropzone";
 import { useState } from "react";
+import ShowResults from "./ShowResults";
 
 function FileDropzone() {
   const [uploading, setUploading] = useState(false);
   const [uploadStatus, setUploadStatus] = useState("");
+  const [importedStories, setImportedStories] = useState(null);
 
   const onDrop = async (file : File[]) => {
     if (file.length === 0) return;
@@ -21,16 +23,12 @@ function FileDropzone() {
       const response = await fetch("https://backend.saviwie.com/import", {
         method: "POST",
         body: formData,
-        // Content-Type bloß nicht manuell setzen, das macht der Browser bei FormData selbst!
       });
 
       if (response.ok) {
-        const result = await response.json(); // Das 'ImportResult' Pydantic-Modell aus dem Backend
-    
-        console.log(result);
-        //setImportedStories(result.stories); 
-    
+        const result = await response.json();  
         setUploadStatus(`Upload erfolgreich! 🎉 ${result.imported} Stories importiert.`);
+        setImportedStories(result);
         console.log("Klassifizierte Stories:", result.stories);
       } else {
         setUploadStatus("Upload fehlgeschlagen. ❌");
@@ -65,6 +63,7 @@ function FileDropzone() {
           borderRadius: "20px",
           cursor: "pointer",
           backgroundColor: uploading ? "#f0f0f0" : "transparent",
+          marginBottom: "10px",
         }}
       >
         <input {...getInputProps()} />
@@ -82,6 +81,7 @@ function FileDropzone() {
           </li>
         ))}
       </ul>
+      <ShowResults data={importedStories} />
     </div>
   );
 }
