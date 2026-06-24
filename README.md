@@ -2,6 +2,10 @@
 
 Ein FastAPI-basierter Dienst zum Klassifizieren von User Stories in die Bündelungsfächer SDM, GID und EVP.
 
+Um das Projekt so schnell wie möglich nutzen zu können, verweisen wir auf die Website, wo wir das Projekt selber hosten:  
+
+[user-story-api.saviwie.com](user-story-api.saviwie.com)
+
 ---
 
 ## Projektstruktur
